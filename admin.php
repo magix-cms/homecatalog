@@ -246,7 +246,7 @@ class plugins_homecatalog_admin extends plugins_homecatalog_db {
 						$this->getItems('newHc',array('default_lang'=>$defaultLanguage['id_lang']),'one','hc');
 						$this->modelLanguage->getLanguage();
 						$display = $this->template->fetch('loop/product.tpl');
-						$this->message->json_post_response(true,'add',$display);
+						$this->message->json_post_response(true,'add',array('result' => $display,'extend' => array('id' =>$this->id)));
 					}
 					elseif($this->type === 'category'){
 						$cat = $this->getItems('cat',null,'one',false);
