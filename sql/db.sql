@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `mc_homecatalog` (
  `id_config` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
  `type_hc` enum('products', 'category') NOT NULL DEFAULT 'products',
  `limit_hc` smallint(2) unsigned NOT NULL DEFAULT 12,
+ `sort_hc` smallint(1) unsigned NOT NULL DEFAULT 0,
  PRIMARY KEY (`id_config`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

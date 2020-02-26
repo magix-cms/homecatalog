@@ -270,6 +270,7 @@ class plugins_homecatalog_admin extends plugins_homecatalog_db {
 					break;
 				case 'edit':
 					if(isset($this->hcconfig)) {
+						$this->hcconfig['sort_hc'] = !isset($this->hcconfig['sort_hc']) ? 0 : 1;
 						$this->upd(array(
 							'type' => 'config',
 							'data' => $this->hcconfig

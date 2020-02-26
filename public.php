@@ -50,16 +50,17 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
     /**
      * @var frontend_model_template
      */
-    protected $template, $data, $lang, $modelCatalog, $dbCatalog;
+    protected $template, $data, $lang, $modelCatalog, $dbCatalog, $conf, $math;
     /**
      * Class constructor
      */
     public function __construct(){
         $this->template = new frontend_model_template();
 		$this->data = new frontend_model_data($this);
-		$this->lang = $this->template->currentLanguage();
+		$this->lang = $this->template->lang;
 		$this->modelCatalog = new frontend_model_catalog($this->template);
 		$this->dbCatalog = new frontend_db_catalog();
+		$this->math = new component_format_math();
     }
 
 	/**
@@ -86,7 +87,7 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 						AND (img.default_img = 1 OR img.default_img IS NULL)
 						AND catalog.default_c = 1 
 						AND p.id_product IN ('.$ids['listids'].')
-						ORDER BY c2.order_p ASC';
+						ORDER BY catalog.order_p ASC';
 		$collection = $this->dbCatalog->fetchData(
 			array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
 			array('iso' => $this->lang)
@@ -105,21 +106,51 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 	 */
 	private function getBuildCatProductList($id,$limit)
 	{
-		$conditions = ' WHERE lang.iso_lang = :iso 
+		if(!$this->conf['sort_hc']) {
+			$conditions = ' WHERE lang.iso_lang = :iso 
 						AND pc.published_p = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL)
 						AND catalog.default_c = 1 
-						AND c2.id_cat = :id_cat
-						ORDER BY c2.order_p ASC
+						AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = :id_cat)
+						ORDER BY catalog.order_p ASC
 						LIMIT 0,'.$limit;
-		$collection = $this->dbCatalog->fetchData(
-			array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
-			array('iso' => $this->lang,'id_cat' => $id)
-		);
+
+			$collection = $this->dbCatalog->fetchData(
+				array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
+				array('iso' => $this->lang,'id_cat' => $id)
+			);
+		}
+		else {
+			$conditions = ' WHERE lang.iso_lang = :iso 
+						AND pc.published_p = 1 
+						AND (img.default_img = 1 OR img.default_img IS NULL)
+						AND catalog.default_c = 1 
+						AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = '.$id.')';
+
+			$ttp = parent::fetchData(
+				array('context' => 'one', 'type' => 'tot_product', 'conditions' => $conditions),
+				array('iso' => $this->lang)
+			);
+
+			$limit = $limit < $ttp['tot'] ? $limit : $ttp['tot'];
+			$product_ids = $this->math->getRandomIds($limit,$ttp['tot'],1,false);
+
+			//$conditions .= ' AND rows.row_id IN  (' . implode(',',$product_ids) .')';
+			$ids = array();
+			foreach ($product_ids as $id) $ids[] = "($id)";
+			$ids = implode(',',$ids);
+
+			$collection = $this->dbCatalog->fetchData(
+				array('context' => 'all', 'type' => 'rand_product', 'conditions' => $conditions),
+				array('iso' => $this->lang, 'ids' => $ids)
+			);
+		}
+
 		$newarr = array();
 		foreach ($collection as $item) {
 			$newarr[] = $this->modelCatalog->setItemData($item,null);
 		}
+
 		return $newarr;
 	}
 
@@ -128,16 +159,16 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 	 * @return array
 	 */
     public function getHcs($params = array()){
-		$config = $this->getItems('hcconfig',null,'one',false);
+		$this->conf = $this->getItems('hcconfig',null,'one',false);
 		if(!is_array($params) || empty($params)) {
 			$hcs = null;
-			if($config['type_hc'] === 'products') {
-				$hcs = $this->getItems('homeHcs',array('limit'=>$config['limit_hc']),'one', false);
+			if($this->conf['type_hc'] === 'products') {
+				$hcs = $this->getItems('homeHcs',array('limit'=>$this->conf['limit_hc']),'one', false);
 				$hcs = $this->getBuildProductList($hcs);
 			}
-			elseif($config['type_hc'] === 'category') {
+			elseif($this->conf['type_hc'] === 'category') {
 				$hcs = $this->getItems('cat',null,'one', false);
-				$hcs = $this->getBuildCatProductList($hcs['id_cat'],$config['limit_hc']);
+				$hcs = $this->getBuildCatProductList($hcs['id_cat'],$this->conf['limit_hc']);
 			}
 			return $hcs;
     	}

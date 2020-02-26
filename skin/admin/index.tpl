@@ -46,6 +46,15 @@
                                     <label for="limit">{#limit_hc#}</label>
                                     <input class="form-control" type="number" name="hcconfig[limit_hc]" id="limit" value="{$hcconfig.limit_hc}" min="1" max="24">
                                 </div>
+                                <div class="form-group">
+                                    <div class="switch">
+                                        <input type="checkbox" id="random" name="hcconfig[sort_hc]" class="switch-native-control"{if $hcconfig.sort_hc} checked{/if} />
+                                        <div class="switch-bg">
+                                            <div class="switch-knob"></div>
+                                        </div>
+                                    </div>
+                                    <label for="random">Aléatoire (uniquement mode catégorie)</label>
+                                </div>
                                 <div id="submit">
                                     <input type="hidden" id="id_config" name="hcconfig[id_config]" value="{$hcconfig.id_config}">
                                     <button class="btn btn-main-theme" type="submit" name="action" value="edit">{#save#|ucfirst}</button>

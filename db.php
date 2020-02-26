@@ -33,7 +33,10 @@ class plugins_homecatalog_db
 							FROM mc_catalog_product AS p
 							JOIN mc_catalog_product_content AS pc USING(id_product)
 							JOIN mc_lang AS lang ON(pc.id_lang = lang.id_lang)
-							WHERE pc.id_lang = :default_lang';
+							WHERE pc.id_lang = :default_lang AND pc.published_p = 1
+							AND p.id_product NOT IN (
+							    SELECT id_product FROM mc_homecatalog_p
+							)';
 					break;
 				case 'cats':
 					$sql = 'SELECT 
@@ -68,6 +71,19 @@ class plugins_homecatalog_db
 					break;
 				case 'hcconfig':
 					$sql = 'SELECT * FROM mc_homecatalog ORDER BY id_config DESC LIMIT 0,1';
+					break;
+				case 'tot_product':
+					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+					$sql = "SELECT 
+								COUNT(DISTINCT p.id_product) as tot
+							FROM mc_catalog AS catalog
+							JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
+							JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
+							JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
+							JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
+							LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
+							LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
+							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang) $conditions";
 					break;
 			}
 
@@ -133,7 +149,8 @@ class plugins_homecatalog_db
 				$sql = 'UPDATE mc_homecatalog 
 						SET 
 							type_hc = :type_hc,
-							limit_hc = :limit_hc
+							limit_hc = :limit_hc,
+							sort_hc = :sort_hc
 						WHERE id_config = :id_config';
 				break;
 		}
