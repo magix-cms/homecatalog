@@ -51,11 +51,13 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
      * @var frontend_model_template
      */
     protected $template, $data, $lang, $modelCatalog, $dbCatalog, $conf, $math;
+
     /**
-     * Class constructor
+     * plugins_homecatalog_public constructor.
+     * @param null $t
      */
-    public function __construct(){
-        $this->template = new frontend_model_template();
+    public function __construct($t = null){
+        $this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->data = new frontend_model_data($this);
 		$this->lang = $this->template->lang;
 		$this->modelCatalog = new frontend_model_catalog($this->template);
@@ -75,11 +77,13 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
 
-	/**
-	 * set Data from database
-	 * @access private
-	 * @return array
-	 */
+    /**
+     * set Data from database
+     * @access private
+     * @param $ids
+     * @return array
+     * @throws Exception
+     */
 	private function getBuildProductList($ids)
 	{
 		$conditions = ' WHERE lang.iso_lang = :iso 
@@ -99,11 +103,14 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 		return $newarr;
 	}
 
-	/**
-	 * set Data from database
-	 * @access private
-	 * @return array
-	 */
+    /**
+     * set Data from database
+     * @access private
+     * @param $id
+     * @param $limit
+     * @return array
+     * @throws Exception
+     */
 	private function getBuildCatProductList($id,$limit)
 	{
 		if(!$this->conf['sort_hc']) {
@@ -154,10 +161,11 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 		return $newarr;
 	}
 
-	/**
-	 * @param array $params
-	 * @return array
-	 */
+    /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
     public function getHcs($params = array()){
 		$this->conf = $this->getItems('hcconfig',null,'one',false);
 		if(!is_array($params) || empty($params)) {

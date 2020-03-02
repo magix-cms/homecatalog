@@ -19,3 +19,34 @@ Ajouter un ou plusieurs produits sur la page d'accueil de votre site internet.
     {include file="homecatalog/brick/catalog.tpl"}
 {/block}
 ````
+Si vous utilisez le mode ow carousel il faut ajouter dans le global.js
+```javascript
+if($(".owl-products").length > 0 && $.fn.owlCarousel !== undefined) {
+            $(".owl-products").owlCarousel(Object.assign({},owlOptions,{
+                loop: false,
+                responsive:{
+                    0:{
+                        items:1,
+                        margin: 0
+                    },
+                    480:{
+                        items:2,
+                        margin: 0
+                    },
+                    768:{
+                        items:2,
+                        margin: 30
+                    },
+                    992:{
+                        items:3,
+                        margin: 30
+                    },
+                    1200:{
+                        items:4,
+                        // slideBy:2,
+                        margin: 30
+                    }
+                }
+            }));
+        }
+````

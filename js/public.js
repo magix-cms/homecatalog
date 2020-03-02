@@ -1,6 +1,7 @@
 /* Add this block to the global.js file of your theme */
 if($(".owl-products").length > 0 && $.fn.owlCarousel !== undefined) {
     $(".owl-products").owlCarousel(Object.assign({},owlOptions,{
+        loop: false,
         responsive:{
             0:{
                 items:1,
