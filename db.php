@@ -64,7 +64,7 @@ class plugins_homecatalog_db
 							WHERE pc.id_lang = :default_lang ORDER BY id_hc DESC LIMIT 0,1';
 					break;
 				case 'homeHcs':
-					$sql = "SELECT GROUP_CONCAT( `id_product` SEPARATOR ',' ) AS listids FROM mc_homecatalog_p ORDER BY order_hc LIMIT 0,:limit";
+					$sql = "SELECT substring_index(GROUP_CONCAT( `id_product` ORDER BY order_hc SEPARATOR ','), ',', :limit) AS listids FROM mc_homecatalog_p";
 					break;
 				case 'cat':
 					$sql = 'SELECT * FROM mc_homecatalog_c ORDER BY id_hc DESC LIMIT 0,1';
@@ -138,7 +138,7 @@ class plugins_homecatalog_db
 			case 'order':
 				$sql = 'UPDATE mc_homecatalog_p 
 						SET order_hc = :order_hc
-						WHERE id_hc = :id';
+						WHERE id_hc = :id_hc';
 				break;
 			case 'hc_c':
 				$sql = 'UPDATE mc_homecatalog_c 

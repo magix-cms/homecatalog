@@ -86,12 +86,13 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
      */
 	private function getBuildProductList($ids)
 	{
-		$conditions = ' WHERE lang.iso_lang = :iso 
+		$conditions = ' JOIN mc_homecatalog_p AS hc ON ( hc.id_product = p.id_product )
+		                WHERE lang.iso_lang = :iso 
 						AND pc.published_p = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL)
 						AND catalog.default_c = 1 
 						AND p.id_product IN ('.$ids['listids'].')
-						ORDER BY catalog.order_p ASC';
+						ORDER BY hc.order_hc ASC';
 		$collection = $this->dbCatalog->fetchData(
 			array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
 			array('iso' => $this->lang)

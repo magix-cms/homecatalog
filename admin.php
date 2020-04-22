@@ -131,9 +131,10 @@ class plugins_homecatalog_admin extends plugins_homecatalog_db {
 		}
 
 		// --- Order
-		if (http_request::isPost('product')) {
-			$this->product = $formClean->arrayClean($_POST['product']);
+		if (http_request::isPost('order')) {
+			$this->product = $formClean->arrayClean($_POST['order']);
 		}
+
 		if (http_request::isPost('hcconfig')) {
 			$this->hcconfig = $formClean->arrayClean($_POST['hcconfig']);
 		}
