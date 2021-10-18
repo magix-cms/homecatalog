@@ -76,7 +76,13 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
-
+    /**
+     * Load modules attached to homecatalog
+     */
+    private function loadModules() {
+        if(!isset($this->module)) $this->module = new frontend_model_module();
+        if(!isset($this->mods)) $this->mods = $this->module->load_module('homecatalog');
+    }
     /**
      * set Data from database
      * @access private
@@ -86,7 +92,7 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
      */
 	private function getBuildProductList($ids)
 	{
-		$conditions = ' JOIN mc_homecatalog_p AS hc ON ( hc.id_product = p.id_product )
+        $conditions = ' JOIN mc_homecatalog_p AS hc ON ( hc.id_product = p.id_product )
 		                WHERE lang.iso_lang = :iso 
 						AND pc.published_p = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL)
@@ -98,9 +104,15 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 			array('iso' => $this->lang)
 		);
 		$newarr = array();
-		foreach ($collection as $item) {
-			$newarr[] = $this->modelCatalog->setItemData($item,null);
-		}
+        // Get id attribute_data if exists
+        $this->loadModules();
+        if(isset($this->mods['attribute']) && method_exists($this->mods['attribute'],'getBuildAttribute')){
+            $newarr = $this->mods['attribute']->getBuildAttribute($collection);
+        }else{
+            foreach ($collection as $item) {
+                $newarr[] = $this->modelCatalog->setItemData($item,null);
+            }
+        }
 		return $newarr;
 	}
 
@@ -153,11 +165,16 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
 				array('iso' => $this->lang, 'ids' => $ids)
 			);
 		}
-
-		$newarr = array();
-		foreach ($collection as $item) {
-			$newarr[] = $this->modelCatalog->setItemData($item,null);
-		}
+        $newarr = array();
+        // Get id attribute_data if exists
+        $this->loadModules();
+        if(isset($this->mods['attribute']) && method_exists($this->mods['attribute'],'getBuildAttribute')){
+            $newarr = $this->mods['attribute']->getBuildAttribute($collection);
+        }else{
+            foreach ($collection as $item) {
+                $newarr[] = $this->modelCatalog->setItemData($item,null);
+            }
+        }
 
 		return $newarr;
 	}
