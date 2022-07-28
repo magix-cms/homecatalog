@@ -187,14 +187,14 @@ class plugins_homecatalog_public extends plugins_homecatalog_db{
     public function getHcs($params = array()){
 		$this->conf = $this->getItems('hcconfig',null,'one',false);
 		if(!is_array($params) || empty($params)) {
-			$hcs = null;
+			$hcs = [];
 			if($this->conf['type_hc'] === 'products') {
 				$hcs = $this->getItems('homeHcs',array('limit'=>$this->conf['limit_hc']),'one', false);
-				$hcs = $this->getBuildProductList($hcs);
+				$hcs = empty($hcs) ? [] : $this->getBuildProductList($hcs);
 			}
 			elseif($this->conf['type_hc'] === 'category') {
 				$hcs = $this->getItems('cat',null,'one', false);
-				$hcs = $this->getBuildCatProductList($hcs['id_cat'],$this->conf['limit_hc']);
+				$hcs = empty($hcs) ? [] : $this->getBuildCatProductList($hcs['id_cat'],$this->conf['limit_hc']);
 			}
 			return $hcs;
     	}
