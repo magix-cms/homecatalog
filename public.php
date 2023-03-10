@@ -246,7 +246,11 @@ class plugins_homecatalog_public extends plugins_homecatalog_db {
                             'type' => 'AND',
                             'condition' => 'p.id_product IN (' . $hcs['listids'] . ')'
                         ]
-                    ]];
+                    ],
+                    'order' => [
+                        'hc.order_hc ASC'
+                    ]
+                ];
                 //AND p.id_product IN ('.$ids['listids'].')
                 $extend['newRow'] = ['homecatalog' => 'homecatalog'];
                 $extend['collection'] = 'homecatalog';

@@ -179,7 +179,7 @@ class plugins_homecatalog_db {
 	 */
 	public function update(string $type, array $params = []): bool {
 		switch ($type) {
-			case 'order_product':
+			case 'order_products':
 				$query = 'UPDATE mc_homecatalog_p 
 						SET order_hc = :order_hc
 						WHERE id_hc = :id_hc';
