@@ -25,6 +25,11 @@
 			<version>2.0.0</version>
 			<phase>Stable</phase>
 		</release>
+		<bind>
+			<core>
+				<name>product</name>
+			</core>
+		</bind>
 		<support>
 			<ticket href="https://github.com/magix-cms/homecatalog/issues"></ticket>
 			<git href="https://github.com/magix-cms/homecatalog"></git>
