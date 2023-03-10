@@ -45,14 +45,14 @@
             </div>
         </fieldset>
     </form>
-    <div id="link-list" class="col-ph-12 col-md-6 col-lg-4">
+    <div class="col-ph-12 col-md-6 col-lg-4">
         <h2>{#hc_on_homepage#}</h2>
-        <ul id="table-product" class="list-group sortable" role="tablist">
-            {foreach $hcs as $hc}
-                {include file="loop/product.tpl"}
+        <ul id="table-products" class="list-group sortable" data-tabs="products" role="tablist">
+            {foreach $hc_products as $hc}
+                {include file="loop/products.tpl"}
             {/foreach}
         </ul>
-        <p class="no-entry alert alert-info{if {$hcs|count}} hide{/if}">
+        <p class="no-entry alert alert-info{if {$hc_products|count}} hide{/if}">
             <span class="fa fa-info"></span> {#hc_no_products#}
         </p>
     </div>

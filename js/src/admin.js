@@ -3,7 +3,7 @@
  #
  # This file is part of MAGIX CMS.
  # MAGIX CMS, The content management system optimized for users
- # Copyright (C) 2008 - 2013 magix-cms.com <support@magix-cms.com>
+ # Copyright (C) 2008 - 2021 magix-cms.com <support@magix-cms.com>
  #
  # OFFICIAL TEAM :
  #
@@ -19,14 +19,14 @@
  # but WITHOUT ANY WARRANTY; without even the implied warranty of
  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  # GNU General Public License for more details.
-
+ #
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <http://www.gnu.org/licenses/>.
  #
  # -- END LICENSE BLOCK -----------------------------------
-
+ #
  # DISCLAIMER
-
+ #
  # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
  # versions in the future. If you wish to customize MAGIX CMS for your
  # needs please refer to http://www.magix-cms.com for more information.
@@ -49,9 +49,10 @@ var homecatalog = (function ($, undefined) {
             placeholder: "list-group-item list-group-item-default",
             update: function(){
                 var serial = $( ".sortable" ).sortable('serialize', { key: "order[]" });
+                var tabs = $( ".sortable" ).data('tabs');
                 $.jmRequest({
                     handler: "ajax",
-                    url: '/admin/index.php?controller=homecatalog&action=order',
+                    url: '/admin/index.php?controller=homecatalog&action=order&tabs='+tabs,
                     method: 'POST',
                     data : serial,
                     success:function(e){

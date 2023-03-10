@@ -1,13 +1,27 @@
 {widget_homecatalog_data}
-{if isset($hc_products) && $hc_products != null}
-    <section id="homecatalog" class="clearfix">
-        <div class="container">
-            <h3 class="h2">{#homecatalog_title#}</h3>
-            <div class="vignette-list">
-                <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/product.tpl" data=$hc_products classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4'}
+{*<pre>{$homeCatalog|print_r}</pre>*}
+{if isset($homeCatalog) && $homeCatalog != null && !empty($hc_conf)}
+    {if $hc_conf['type_hc'] === 'categories'}
+        <section id="homecatalog" class="homecatalog clearfix">
+            <div class="container">
+                <p class="h2">{#homecatalog_title#}</p>
+                {foreach $homeCatalog as $key => $cat}
+                    {if $cat.products}
+                        <div class="list-grid product-list">
+                            {include file="catalog/loop/product.tpl" data=$cat.products classCol='vignette' nocache}
+                        </div>
+                    {/if}
+                {/foreach}
+            </div>
+        </section>
+    {else}
+        <section id="homecatalog" class="homecatalog clearfix">
+            <div class="container">
+                <p class="h2">{#homecatalog_title#}</p>
+                <div class="list-grid product-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                    {include file="catalog/loop/product.tpl" data=$homeCatalog classCol='vignette' nocache}
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    {/if}
 {/if}
