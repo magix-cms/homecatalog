@@ -1,6 +1,49 @@
+// Compiler options
+@import (reference) "mixins";
+// ------
 #homecatalog {
 	h3 {
 		text-align: center;
 		margin: 0 auto 2em;
+	}
+	.tns-controls {
+		button {
+			position: absolute;
+			text-align: center;
+			z-index: 200;
+			background-color: transparent;
+			border: none;
+			opacity: 0.7;
+			height: 100%;
+			padding: 1rem;
+			color: var(--dark-color);//var(--white);
+
+			.material-icons {
+				font-size: 3rem;//4rem;
+			}
+			> i{
+				background-color: var(--white);
+				border: 1px solid var(--main-color);
+				//border-radius: 50%;
+			}
+			&:hover {
+				opacity: 1;
+			}
+			&:focus {
+				outline: none;
+			}
+
+			&[data-controls="prev"] {
+				left: 0;
+			}
+
+			&[data-controls="next"] {
+				right: 0;
+			}
+
+			&:disabled {
+				display: none;
+			}
+		}
 	}
 }

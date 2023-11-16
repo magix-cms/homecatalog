@@ -31,7 +31,7 @@
                                         {/foreach}
                                     </ul>
                                     <div class="no-search-results">
-                                        <div class="alert alert-warning" role="alert"><i class="fa fa-warning margin-right-sm"></i>{#hc_no_entry_for#|sprintf:"<strong>'<span></span>'</strong>"}</div>
+                                        <div class="alert alert-warning" role="alert"><i class="fa fa-warning margin-right-sm"></i>{sprintf(#hc_no_entry_for#,"<strong>'<span></span>'</strong>")}</div>
                                     </div>
                                 </div>
                             </div>
