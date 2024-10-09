@@ -69,6 +69,10 @@ class plugins_homecatalog_public extends plugins_homecatalog_db {
      */
     protected
         $lang;
+    /**
+     * @var string $controller
+     */
+    public string $controller;
 
     /**
      * plugins_homecatalog_public constructor.
@@ -245,6 +249,10 @@ class plugins_homecatalog_public extends plugins_homecatalog_db {
                         [
                             'type' => 'AND',
                             'condition' => 'p.id_product IN (' . $hcs['listids'] . ')'
+                        ],
+                        [
+                            'type' => 'AND',
+                            'condition' => 'catalog.default_c = 1'
                         ]
                     ],
                     'order' => [
@@ -252,11 +260,11 @@ class plugins_homecatalog_public extends plugins_homecatalog_db {
                     ]
                 ];
                 //AND p.id_product IN ('.$ids['listids'].')
-                $extend['newRow'] = ['homecatalog' => 'homecatalog'];
-                $extend['collection'] = 'homecatalog';
                 //print_r($extend);
             }
         }
+        $extend['newRow'] = ['homecatalog' => 'homecatalog'];
+        $extend['collection'] = 'homecatalog';
         return $extend;
     }
     /**
